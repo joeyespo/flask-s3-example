@@ -37,6 +37,8 @@ $(function() {
         alert('Upload failed.');
       },
       success: function(data) {
+        console.log('Success!');
+
         // Here we get the file url on s3 in an xml doc
         var url = decodeURIComponent($(data).find('Location').text());
 
