@@ -40,14 +40,14 @@ def signed_urls():
     def sign_policy(policy):
         return b64encode(hmac.new(app.config['AWS_SECRET_ACCESS_KEY'], policy, sha).digest())
 
-    uuid = uuid4().hex
     title = request.args['title']
+    path = uuid4().hex + '/' + title
     policy = make_policy()
 
     return jsonify({
         'policy': policy,
         'signature': sign_policy(policy),
-        'key': 'uploads/%s-%s' % (uuid, title),
+        'key': 'uploads/' + path,
         'success_action_redirect': '/',
     })
 
