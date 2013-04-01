@@ -5,7 +5,8 @@ Flask S3 Example
 
 import sha
 import hmac
-import json
+from uuid import uuid4
+from json import dumps
 from base64 import b64encode
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify
@@ -26,21 +27,29 @@ def index():
 
 @app.route('/signed_urls')
 def signed_urls():
-    uuid = 1    # TODO: SecureRandom.uuid
+    def make_policy():
+        policy_object = {
+            'expiration': (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
+            'conditions': [
+                {'bucket': app.config['AWS_S3_BUCKET']},
+                {'acl': 'public-read'},
+                ['starts-with', '$key', 'uploads/'],
+                {'success_action_status': '201'}
+            ]
+        }
+        return b64encode(dumps(policy_object))
+
+    def sign_policy(policy):
+        return b64encode(hmac.new(app.config['AWS_SECRET_ACCESS_KEY'], policy, sha).digest())
+
+    uuid = uuid4().hex
     title = request.args['title']
-    s3_upload_policy_document = json.dumps({
-        'expiration': (datetime.utcnow() + timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
-        'conditions': [
-            {'bucket': app.config['AWS_S3_BUCKET']},
-            {'acl': 'public-read'},
-            #['starts-with', '$key', 'uploads/'],
-            {'success_action_status': '201'},
-        ]})
-    s3_upload_signature = b64encode(hmac.new(app.config['AWS_SECRET_ACCESS_KEY'], s3_upload_policy_document, sha).digest())
+    policy = make_policy()
+
     return jsonify({
-        'policy': s3_upload_policy_document,
-        'signature': s3_upload_signature,
-        'key': 'uploads/%s/%s' % (uuid, title),
+        'policy': policy,
+        'signature': sign_policy(policy),
+        'key': 'uploads/%s-%s' % (uuid, title),
         'success_action_redirect': '/',
     })
 
