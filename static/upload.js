@@ -43,7 +43,7 @@ $(function() {
         var url = decodeURIComponent($(data).find('Location').text());
 
         // Update the real input in the other form
-        form.find('.photo_file').val(url);
+        form.find('.photo_file').attr('src', url);
       },
       done: function (event, data) {
         $('.progress').fadeOut(300, function() {
