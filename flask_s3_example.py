@@ -20,8 +20,8 @@ app.config.from_pyfile('config.py')
 @app.route('/')
 def index():
     return render_template('index.html',
-        s3_bucket=app.config['S3_BUCKET'],
-        aws_access_key=app.config['AWS_ACCESS_KEY'])
+        s3_bucket=app.config['AWS_S3_BUCKET'],
+        aws_access_key=app.config['AWS_ACCESS_KEY_ID'])
 
 
 @app.route('/signed_urls')
@@ -31,12 +31,12 @@ def signed_urls():
     s3_upload_policy_document = json.dumps({
         'expiration': (datetime.utcnow() + timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
         'conditions': [
-            {'bucket': app.config['S3_BUCKET']},
+            {'bucket': app.config['AWS_S3_BUCKET']},
             {'acl': 'public-read'},
             #['starts-with', '$key', 'uploads/'],
             {'success_action_status': '201'},
         ]})
-    s3_upload_signature = b64encode(hmac.new(app.config['AWS_SECRET_KEY'], s3_upload_policy_document, sha).digest())
+    s3_upload_signature = b64encode(hmac.new(app.config['AWS_SECRET_ACCESS_KEY'], s3_upload_policy_document, sha).digest())
     return jsonify({
         'policy': s3_upload_policy_document,
         'signature': s3_upload_signature,
