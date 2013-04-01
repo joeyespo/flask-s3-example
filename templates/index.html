@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>S3 POST Form</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+    <script src="{{ url_for('.static', filename='jquery.ui.widget.js') }}"></script>
+    <script src="{{ url_for('.static', filename='jquery.fileupload.js') }}"></script>
+    <script src="{{ url_for('.static', filename='upload.js') }}"></script>
+  </head>
+
+  <body>
+    <h2>Direct S3 Upload Example</h2>
+
+    <form action="https://{{ s3_bucket }}.s3.amazonaws.com/" method="POST" enctype="multipart/form-data" class="direct-upload">
+      <input type="hidden" name="key" />
+      <input type="hidden" name="AWSAccessKeyId" value="{{ aws_access_key }}" />
+      <input type="hidden" name="acl" value="public-read" />
+      <input type="hidden" name="success_action_redirect" value="http://localhost/" />
+      <input type="hidden" name="policy" />
+      <input type="hidden" name="signature" />
+      <input type="hidden" name="success-action-status" value="201" />
+
+      <h2>File to upload to S3:</h2>
+      <input name="file" type="file">
+
+      <img src="#" class="photo_file" />
+    </form>
+  </body>
+</html>
