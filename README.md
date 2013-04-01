@@ -1,7 +1,7 @@
 Flask S3 Example
 ================
 
-Just a quick example on how to run S3 in Flask.
+Just a quick example on how to directly upload to S3 in Flask.
 This example uses Flask config variables, allowing you to run out-of-the-box.
 
 
