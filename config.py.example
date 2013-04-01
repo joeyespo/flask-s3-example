@@ -1,4 +1,6 @@
+HOST = 'localhost'
 PORT = 5000
+DEBUG = True
 
 S3_BUCKET = ''
 AWS_ACCESS_KEY = ''
