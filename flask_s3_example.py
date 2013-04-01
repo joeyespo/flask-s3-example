@@ -20,9 +20,7 @@ app.config.from_pyfile('config.py')
 # Views
 @app.route('/')
 def index():
-    return render_template('index.html',
-        s3_bucket=app.config['AWS_S3_BUCKET'],
-        aws_access_key=app.config['AWS_ACCESS_KEY_ID'])
+    return render_template('index.html')
 
 
 @app.route('/signed_urls')

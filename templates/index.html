@@ -13,9 +13,9 @@
   <body>
     <h2>Direct S3 Upload Example</h2>
 
-    <form action="https://{{ s3_bucket }}.s3.amazonaws.com/" method="POST" enctype="multipart/form-data" class="direct-upload">
+    <form action="https://{{ config.AWS_S3_BUCKET }}.s3.amazonaws.com" method="POST" enctype="multipart/form-data" class="direct-upload">
       <input type="hidden" name="key" />
-      <input type="hidden" name="AWSAccessKeyId" value="{{ aws_access_key }}" />
+      <input type="hidden" name="AWSAccessKeyId" value="{{ config.AWS_ACCESS_KEY_ID }}" />
       <input type="hidden" name="acl" value="public-read" />
       <input type="hidden" name="success_action_redirect" value="http://localhost/" />
       <input type="hidden" name="policy" />
